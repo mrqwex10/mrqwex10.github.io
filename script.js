@@ -1,71 +1,72 @@
 /* ═══════════════════════════════════════════════════════════
-   PS2 PORTFOLIO — SCRIPT
-   Boot sequence · Three.js scene · Typewriter · Interactions
+   JACOB SMITH — PORTFOLIO SCRIPT
+   Boot · Three.js · Grain · Screen Tear · Glitch · Typewriter
 ═══════════════════════════════════════════════════════════ */
 
 /* ── BOOT SEQUENCE ─────────────────────────────────────── */
 (function runBoot() {
-  const fill    = document.getElementById('boot-fill');
-  const pct     = document.getElementById('boot-pct');
-  const lines   = [document.getElementById('bl-1'), document.getElementById('bl-2'), document.getElementById('bl-3')];
-  const syms    = [document.getElementById('bs-tri'), document.getElementById('bs-cir'), document.getElementById('bs-cro'), document.getElementById('bs-squ')];
-  const screen  = document.getElementById('boot-screen');
-  const port    = document.getElementById('portfolio');
+  const fill  = document.getElementById('boot-fill');
+  const pct   = document.getElementById('boot-pct');
+  const lines = ['bl-1','bl-2','bl-3'].map(id => document.getElementById(id));
+  const syms  = ['bs-tri','bs-cir','bs-cro','bs-squ'].map(id => document.getElementById(id));
+  const screen = document.getElementById('boot-screen');
+  const port   = document.getElementById('portfolio');
 
-  // Show symbols one by one
-  syms.forEach((s, i) => setTimeout(() => s.classList.add('show'), 600 + i * 200));
+  // Reveal symbols
+  syms.forEach((s, i) => setTimeout(() => s.classList.add('show'), 500 + i * 180));
 
-  // Show text lines
-  lines.forEach((l, i) => setTimeout(() => l.classList.add('show'), 1400 + i * 300));
+  // Reveal text lines
+  lines.forEach((l, i) => setTimeout(() => l.classList.add('show'), 1200 + i * 320));
 
-  // Animate progress bar
+  // Progress bar — starts fast, hesitates near 100
   let progress = 0;
-  const interval = setInterval(() => {
-    progress += Math.random() * 4 + 1;
-    if (progress >= 100) progress = 100;
+  const tick = setInterval(() => {
+    const speed = progress < 85 ? Math.random() * 5 + 2 : Math.random() * 1 + 0.3;
+    progress = Math.min(progress + speed, 100);
     fill.style.width = progress + '%';
     pct.textContent  = Math.floor(progress) + '%';
-    if (progress >= 100) clearInterval(interval);
-  }, 60);
+    if (progress >= 100) clearInterval(tick);
+  }, 55);
 
-  // Glitch out and reveal portfolio after ~4.2s
+  // Glitch exit — reveal portfolio
   setTimeout(() => {
-    screen.style.animation = 'boot-glitch-out 0.5s ease forwards';
+    screen.style.animation = 'boot-exit 0.55s ease forwards';
     setTimeout(() => {
       screen.style.display = 'none';
       port.classList.remove('hidden');
+      document.getElementById('warning-strip').classList.remove('hidden');
       initPortfolio();
-    }, 480);
-  }, 4200);
+    }, 520);
+  }, 4400);
 })();
 
-// Boot exit animation (injected dynamically to avoid blocking parse)
-const bootStyle = document.createElement('style');
-bootStyle.textContent = `
-  @keyframes boot-glitch-out {
-    0%  { opacity:1; transform:none; filter:none; }
-    20% { opacity:1; transform:translateX(-6px) skewX(2deg); filter:hue-rotate(90deg); }
-    40% { opacity:1; transform:translateX(6px) skewX(-2deg); filter:hue-rotate(180deg); }
-    60% { opacity:0.5; transform:scaleY(0.8); filter:brightness(3); }
-    80% { opacity:0.2; transform:scaleY(0.1); }
+const exitAnim = document.createElement('style');
+exitAnim.textContent = `
+  @keyframes boot-exit {
+    0%  { opacity:1; filter:none; transform:none; }
+    15% { opacity:1; filter:hue-rotate(90deg) contrast(2); transform:translateX(-5px) skewX(3deg); }
+    30% { opacity:1; filter:hue-rotate(180deg); transform:translateX(5px) skewX(-3deg); }
+    55% { opacity:0.6; filter:brightness(4) saturate(0); transform:scaleY(0.6); }
+    80% { opacity:0.1; transform:scaleY(0.05); }
     100%{ opacity:0; transform:scaleY(0); }
   }
 `;
-document.head.appendChild(bootStyle);
+document.head.appendChild(exitAnim);
 
 /* ══════════════════════════════════════════════════════════
-   MAIN INIT — runs after boot screen fades
+   MAIN INIT
 ══════════════════════════════════════════════════════════ */
 function initPortfolio() {
   initThreeScene();
+  initGrainCanvas();
   initTypewriter();
   initNavScroll();
   initReveal();
-  initSkillBars();
-  initCounters();
+  initRandomGlitch();
+  initScreenTear();
 }
 
-/* ── THREE.JS BACKGROUND SCENE ─────────────────────────── */
+/* ── THREE.JS SCENE ────────────────────────────────────── */
 function initThreeScene() {
   if (typeof THREE === 'undefined') return;
 
@@ -76,146 +77,171 @@ function initThreeScene() {
 
   const scene  = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
-  camera.position.set(0, 0, 60);
+  camera.position.z = 65;
 
-  // Subtle blue fog
-  scene.fog = new THREE.FogExp2(0x000510, 0.012);
+  scene.fog = new THREE.FogExp2(0x000208, 0.011);
 
-  // ── Floating wireframe objects
-  const colors = [0x00d4ff, 0x448aff, 0x00e676, 0xe91e63, 0xff9100];
+  // Colour palette — mostly cold, with a few blood-red objects
+  const cold  = [0x00ccff, 0x3366dd, 0x0044aa, 0x006688];
+  const hot   = [0xcc0000, 0xff2200];
+  const allColors = [...cold, ...cold, ...cold, ...hot]; // mostly cold
 
-  const makeGeos = () => [
-    new THREE.IcosahedronGeometry(2.5, 0),
-    new THREE.OctahedronGeometry(2.2, 0),
-    new THREE.TetrahedronGeometry(2.4, 0),
-    new THREE.DodecahedronGeometry(1.8, 0),
-    new THREE.TorusGeometry(2.2, 0.4, 6, 6),
-    new THREE.TorusKnotGeometry(1.4, 0.35, 50, 6),
-    new THREE.IcosahedronGeometry(1.4, 0),
-    new THREE.OctahedronGeometry(1.6, 0),
-    new THREE.TorusGeometry(1.6, 0.3, 5, 5),
-    new THREE.TetrahedronGeometry(1.8, 0),
-    new THREE.DodecahedronGeometry(2.2, 0),
-    new THREE.IcosahedronGeometry(3, 0),
+  const geoFactories = [
+    () => new THREE.IcosahedronGeometry(2.6, 0),
+    () => new THREE.OctahedronGeometry(2.3, 0),
+    () => new THREE.TetrahedronGeometry(2.5, 0),
+    () => new THREE.DodecahedronGeometry(1.9, 0),
+    () => new THREE.TorusGeometry(2.4, 0.4, 6, 6),
+    () => new THREE.TorusKnotGeometry(1.5, 0.35, 50, 6),
+    () => new THREE.IcosahedronGeometry(1.5, 0),
+    () => new THREE.OctahedronGeometry(3.0, 0),
+    () => new THREE.TorusGeometry(1.8, 0.3, 5, 5),
+    () => new THREE.TetrahedronGeometry(1.9, 0),
+    () => new THREE.DodecahedronGeometry(2.3, 0),
+    () => new THREE.IcosahedronGeometry(3.2, 0),
+    () => new THREE.TorusKnotGeometry(1.2, 0.28, 40, 5),
+    () => new THREE.OctahedronGeometry(1.7, 0),
   ];
 
-  const objects = makeGeos().map((geo, i) => {
-    const mat = new THREE.MeshBasicMaterial({
-      color: colors[i % colors.length],
+  const objects = geoFactories.map((factory, i) => {
+    const mat  = new THREE.MeshBasicMaterial({
+      color: allColors[i % allColors.length],
       wireframe: true,
       transparent: true,
-      opacity: 0.18 + Math.random() * 0.14,
+      opacity: 0.16 + Math.random() * 0.13,
     });
-    const mesh = new THREE.Mesh(geo, mat);
-    const spread = 65;
+    const mesh = new THREE.Mesh(factory(), mat);
+    const spread = 70;
     mesh.position.set(
       (Math.random() - 0.5) * spread,
-      (Math.random() - 0.5) * spread * 0.7,
-      (Math.random() - 0.5) * 40 - 10
+      (Math.random() - 0.5) * spread * 0.65,
+      (Math.random() - 0.5) * 45 - 12
     );
-    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-    mesh.userData.rotX = (Math.random() - 0.5) * 0.004;
-    mesh.userData.rotY = (Math.random() - 0.5) * 0.006;
-    mesh.userData.floatOffset = Math.random() * Math.PI * 2;
-    mesh.userData.floatSpeed  = 0.3 + Math.random() * 0.4;
+    mesh.rotation.set(Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, 0);
+    mesh.userData.rx   = (Math.random() - 0.5) * 0.005;
+    mesh.userData.ry   = (Math.random() - 0.5) * 0.007;
+    mesh.userData.fOff = Math.random() * Math.PI * 2;
+    mesh.userData.fSpd = 0.25 + Math.random() * 0.45;
     scene.add(mesh);
     return mesh;
   });
 
-  // ── Particle field (stars)
-  const particleCount = 600;
-  const positions = new Float32Array(particleCount * 3);
-  for (let i = 0; i < particleCount; i++) {
-    positions[i * 3]     = (Math.random() - 0.5) * 200;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 120 - 20;
+  // Particle field
+  const pCount = 700;
+  const pPos   = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount; i++) {
+    pPos[i*3]   = (Math.random()-0.5)*220;
+    pPos[i*3+1] = (Math.random()-0.5)*220;
+    pPos[i*3+2] = (Math.random()-0.5)*130 - 20;
   }
   const pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  const pMat = new THREE.PointsMaterial({ color: 0x4488aa, size: 0.25, transparent: true, opacity: 0.5 });
-  scene.add(new THREE.Points(pGeo, pMat));
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  scene.add(new THREE.Points(pGeo, new THREE.PointsMaterial({
+    color: 0x224455, size: 0.22, transparent: true, opacity: 0.55
+  })));
 
-  // ── Mouse parallax
+  // Mouse parallax
   const mouse = { x: 0, y: 0 };
   document.addEventListener('mousemove', e => {
     mouse.x = (e.clientX / window.innerWidth  - 0.5) * 2;
     mouse.y = (e.clientY / window.innerHeight - 0.5) * 2;
-  });
+  }, { passive: true });
 
-  // ── Resize handler
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // ── Animation loop
-  let clock = 0;
-  (function animate() {
-    requestAnimationFrame(animate);
-    clock += 0.016;
-
-    objects.forEach(obj => {
-      obj.rotation.x += obj.userData.rotX;
-      obj.rotation.y += obj.userData.rotY;
-      obj.position.y += Math.sin(clock * obj.userData.floatSpeed + obj.userData.floatOffset) * 0.008;
+  let t = 0;
+  (function loop() {
+    requestAnimationFrame(loop);
+    t += 0.016;
+    objects.forEach(o => {
+      o.rotation.x += o.userData.rx;
+      o.rotation.y += o.userData.ry;
+      o.position.y += Math.sin(t * o.userData.fSpd + o.userData.fOff) * 0.007;
     });
-
-    // Smooth camera parallax
-    camera.position.x += (mouse.x * 4 - camera.position.x) * 0.03;
-    camera.position.y += (-mouse.y * 2 - camera.position.y) * 0.03;
+    camera.position.x += (mouse.x * 5 - camera.position.x) * 0.025;
+    camera.position.y += (-mouse.y * 3 - camera.position.y) * 0.025;
     camera.lookAt(0, 0, 0);
-
     renderer.render(scene, camera);
   })();
 }
 
-/* ── TYPEWRITER EFFECT ─────────────────────────────────── */
-function initTypewriter() {
-  // EDIT: Add your titles here
-  const titles = [
-    'FULL STACK DEVELOPER',
-    'UI / UX ENTHUSIAST',
-    'OPEN SOURCE BUILDER',
-    'CREATIVE TECHNOLOGIST',
-  ];
+/* ── ANIMATED FILM GRAIN ────────────────────────────────── */
+function initGrainCanvas() {
+  const c   = document.getElementById('grain-canvas');
+  const ctx = c.getContext('2d');
+  let frame = 0;
 
-  const el = document.getElementById('typewriter');
+  const resize = () => {
+    // Half-res for perf — CSS stretches it
+    c.width  = Math.ceil(window.innerWidth  / 2);
+    c.height = Math.ceil(window.innerHeight / 2);
+  };
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  (function draw() {
+    requestAnimationFrame(draw);
+    frame++;
+    if (frame % 3 !== 0) return; // ~20fps update
+    const { width, height } = c;
+    const img  = ctx.createImageData(width, height);
+    const data = img.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = (Math.random() * 255) | 0;
+      data[i] = data[i+1] = data[i+2] = v;
+      data[i+3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+  })();
+}
+
+/* ── TYPEWRITER ─────────────────────────────────────────── */
+function initTypewriter() {
+  const titles = [
+    'ELECTRICAL ENGINEER',
+    'FPGA DEVELOPER',
+    'SYSTEMS INTEGRATOR',
+    'WEB DEVELOPER',
+    'I BUILD THINGS THAT DON\'T FAIL',
+  ];
+  const el   = document.getElementById('typewriter');
   let ti = 0, ci = 0, deleting = false;
-  const SPEED_TYPE = 80, SPEED_DELETE = 40, PAUSE = 1800;
 
   function tick() {
-    const current = titles[ti];
+    const word = titles[ti];
     if (!deleting) {
       ci++;
-      el.textContent = current.slice(0, ci);
-      if (ci === current.length) {
+      el.textContent = word.slice(0, ci);
+      if (ci === word.length) {
         deleting = true;
-        setTimeout(tick, PAUSE);
-        return;
+        return setTimeout(tick, 2000);
       }
     } else {
       ci--;
-      el.textContent = current.slice(0, ci);
+      el.textContent = word.slice(0, ci);
       if (ci === 0) {
         deleting = false;
         ti = (ti + 1) % titles.length;
       }
     }
-    setTimeout(tick, deleting ? SPEED_DELETE : SPEED_TYPE);
+    setTimeout(tick, deleting ? 38 : 78);
   }
   tick();
 }
 
-/* ── NAV SCROLL BEHAVIOR ───────────────────────────────── */
+/* ── NAV SCROLL ─────────────────────────────────────────── */
 function initNavScroll() {
   const nav = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 60);
+    nav.classList.toggle('scrolled', window.scrollY > 50);
   }, { passive: true });
 }
 
-/* ── REVEAL ON SCROLL ──────────────────────────────────── */
+/* ── REVEAL ON SCROLL ───────────────────────────────────── */
 function initReveal() {
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
@@ -224,45 +250,86 @@ function initReveal() {
         obs.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12 });
-
+  }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 }
 
-/* ── SKILL BARS ────────────────────────────────────────── */
-function initSkillBars() {
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      e.target.querySelectorAll('.sk-bar').forEach(bar => {
-        bar.style.width = bar.dataset.w + '%';
-      });
-      obs.unobserve(e.target);
-    });
-  }, { threshold: 0.3 });
+/* ── RANDOM ELEMENT GLITCH ──────────────────────────────── */
+function initRandomGlitch() {
+  const targets = () => [
+    ...document.querySelectorAll('.fe-company'),
+    ...document.querySelectorAll('.sh-title'),
+    ...document.querySelectorAll('.proj-title'),
+    ...document.querySelectorAll('.contact-headline'),
+  ];
 
-  document.querySelectorAll('.skill-card').forEach(c => obs.observe(c));
+  function strike() {
+    const els = targets();
+    if (!els.length) return schedule();
+    const el = els[Math.floor(Math.random() * els.length)];
+
+    // Frame 1
+    el.style.cssText = 'filter:hue-rotate(180deg) contrast(2.5) brightness(1.5);transform:translateX(-5px) skewX(2deg);transition:none';
+    setTimeout(() => {
+      // Frame 2
+      el.style.cssText = 'filter:hue-rotate(90deg) saturate(3);transform:translateX(4px) skewX(-1deg);transition:none';
+      setTimeout(() => {
+        // Frame 3 — snap back
+        el.style.cssText = '';
+        setTimeout(() => {
+          // Optional micro-second blip
+          if (Math.random() > 0.5) {
+            el.style.cssText = 'filter:brightness(3) saturate(0);transform:translateX(2px);transition:none';
+            setTimeout(() => { el.style.cssText = ''; }, 45);
+          }
+        }, 80);
+      }, 60);
+    }, 55);
+
+    schedule();
+  }
+
+  function schedule() {
+    setTimeout(strike, 2500 + Math.random() * 6000);
+  }
+  setTimeout(strike, 4000); // first strike after 4s
 }
 
-/* ── COUNTER ANIMATION ─────────────────────────────────── */
-function initCounters() {
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      e.target.querySelectorAll('.stat-n').forEach(el => {
-        const target = parseInt(el.dataset.target, 10);
-        let current  = 0;
-        const step   = Math.max(1, Math.floor(target / 30));
-        const t = setInterval(() => {
-          current = Math.min(current + step, target);
-          el.textContent = current;
-          if (current >= target) clearInterval(t);
-        }, 40);
-      });
-      obs.unobserve(e.target);
-    });
-  }, { threshold: 0.4 });
+/* ── SCREEN TEAR ────────────────────────────────────────── */
+function initScreenTear() {
+  const tears = Array.from({ length: 3 }, () => {
+    const d = document.createElement('div');
+    d.style.cssText = [
+      'position:fixed',
+      'left:0',
+      'right:0',
+      'pointer-events:none',
+      'z-index:9990',
+      'display:none',
+      'mix-blend-mode:screen',
+    ].join(';');
+    document.body.appendChild(d);
+    return d;
+  });
 
-  const aboutSection = document.getElementById('about');
-  if (aboutSection) obs.observe(aboutSection);
+  function tear() {
+    const activeCount = Math.random() > 0.6 ? 2 : 1;
+    for (let i = 0; i < activeCount; i++) {
+      const t = tears[i];
+      const top = Math.random() * 100;
+      const h   = Math.random() < 0.5 ? 1 : (Math.random() * 3 + 1);
+      const isRed = Math.random() > 0.7;
+      t.style.top      = top + 'vh';
+      t.style.height   = h + 'px';
+      t.style.background = isRed ? 'rgba(220,0,0,0.6)' : 'rgba(0,180,255,0.55)';
+      t.style.boxShadow  = isRed
+        ? '0 0 8px rgba(200,0,0,0.8)'
+        : '0 0 6px rgba(0,200,255,0.7)';
+      t.style.display  = 'block';
+      const dur = 40 + Math.random() * 80;
+      setTimeout(() => { t.style.display = 'none'; }, dur);
+    }
+    setTimeout(tear, 3500 + Math.random() * 9000);
+  }
+  setTimeout(tear, 6000);
 }

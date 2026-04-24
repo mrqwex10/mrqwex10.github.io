@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YOUR NAME // PORTFOLIO</title>
+  <title>JACOB SMITH // PORTFOLIO</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
@@ -12,24 +12,43 @@
 <body>
 
   <!-- ═══════════════════════════════════════════
+       WARNING STRIP
+  ═══════════════════════════════════════════ -->
+  <div class="warning-strip hidden" id="warning-strip">
+    <div class="ws-inner">
+      <span>⚠ SYSTEM ACTIVE</span>
+      <span>// DO NOT UNDERESTIMATE</span>
+      <span>⚠ SYSTEM ACTIVE</span>
+      <span>// DO NOT UNDERESTIMATE</span>
+      <span>⚠ SYSTEM ACTIVE</span>
+      <span>// DO NOT UNDERESTIMATE</span>
+      <span>⚠ SYSTEM ACTIVE</span>
+      <span>// DO NOT UNDERESTIMATE</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
        BOOT SCREEN
   ═══════════════════════════════════════════ -->
   <div id="boot-screen">
     <div class="boot-towers">
-      <div class="tower" style="--h:60%;--d:0s"></div>
-      <div class="tower" style="--h:80%;--d:0.1s"></div>
+      <div class="tower" style="--h:70%;--d:0s"></div>
+      <div class="tower" style="--h:90%;--d:0.08s"></div>
+      <div class="tower" style="--h:50%;--d:0.16s"></div>
+      <div class="tower" style="--h:100%;--d:0.04s;--c:var(--blood)"></div>
+      <div class="tower" style="--h:60%;--d:0.12s"></div>
+      <div class="tower" style="--h:80%;--d:0.02s"></div>
       <div class="tower" style="--h:45%;--d:0.2s"></div>
-      <div class="tower" style="--h:90%;--d:0.05s"></div>
-      <div class="tower" style="--h:55%;--d:0.15s"></div>
-      <div class="tower" style="--h:70%;--d:0.08s"></div>
-      <div class="tower" style="--h:40%;--d:0.18s"></div>
-      <div class="tower" style="--h:85%;--d:0.03s"></div>
-      <div class="tower" style="--h:65%;--d:0.12s"></div>
-      <div class="tower" style="--h:50%;--d:0.22s"></div>
-      <div class="tower" style="--h:75%;--d:0.07s"></div>
-      <div class="tower" style="--h:95%;--d:0.17s"></div>
+      <div class="tower" style="--h:95%;--d:0.1s"></div>
+      <div class="tower" style="--h:55%;--d:0.06s;--c:var(--blood)"></div>
+      <div class="tower" style="--h:75%;--d:0.18s"></div>
+      <div class="tower" style="--h:85%;--d:0.14s"></div>
+      <div class="tower" style="--h:40%;--d:0.22s"></div>
+      <div class="tower" style="--h:65%;--d:0.09s"></div>
+      <div class="tower" style="--h:88%;--d:0.01s;--c:var(--blood)"></div>
     </div>
     <div class="boot-content">
+      <div class="boot-warning">⚠ &nbsp;RESTRICTED ACCESS</div>
       <div class="boot-symbols">
         <span class="boot-sym tri" id="bs-tri">△</span>
         <span class="boot-sym cir" id="bs-cir">○</span>
@@ -37,9 +56,9 @@
         <span class="boot-sym squ" id="bs-squ">□</span>
       </div>
       <div class="boot-lines">
-        <div class="boot-line" id="bl-1">SYSTEM&nbsp;INITIALIZED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK</div>
-        <div class="boot-line" id="bl-2">LOADING&nbsp;PORTFOLIO&nbsp;v2.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK</div>
-        <div class="boot-line" id="bl-3">ENTERING&nbsp;THE&nbsp;THIRD&nbsp;PLACE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..</div>
+        <div class="boot-line" id="bl-1">IDENTITY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JACOB SMITH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFIRMED</div>
+        <div class="boot-line" id="bl-2">CLEARANCE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELECTRICAL ENGINEER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK</div>
+        <div class="boot-line" id="bl-3">ENTERING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THE THIRD PLACE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..</div>
       </div>
       <div class="boot-bar-wrap">
         <div class="boot-bar-track">
@@ -47,7 +66,7 @@
         </div>
         <span class="boot-pct" id="boot-pct">0%</span>
       </div>
-      <div class="boot-tagline">LIVE IN YOUR WORLD.&nbsp;&nbsp;PLAY IN OURS.</div>
+      <div class="boot-tagline">DO NOT UNDERESTIMATE.</div>
     </div>
   </div>
 
@@ -56,9 +75,9 @@
   ═══════════════════════════════════════════ -->
   <div id="portfolio" class="hidden">
 
-    <!-- Background canvas -->
     <canvas id="bg-canvas"></canvas>
-    <!-- Scanline overlay -->
+    <canvas id="grain-canvas"></canvas>
+    <div class="vignette"></div>
     <div class="scanlines"></div>
 
     <!-- ── NAV ───────────────────────────────── -->
@@ -68,35 +87,42 @@
         <span class="ns cir">○</span>
         <span class="ns cro">✕</span>
         <span class="ns squ">□</span>
+        <span class="nav-auth">// AUTHENTICATED</span>
       </div>
       <ul class="nav-links">
-        <li><a href="#about"   class="nl"><span class="ns tri">△</span> ABOUT</a></li>
-        <li><a href="#skills"  class="nl"><span class="ns cir">○</span> SKILLS</a></li>
-        <li><a href="#projects"class="nl"><span class="ns cro">✕</span> PROJECTS</a></li>
-        <li><a href="#contact" class="nl"><span class="ns squ">□</span> CONTACT</a></li>
+        <li><a href="#field-log"    class="nl"><span class="ns tri">△</span>&nbsp;FIELD LOG</a></li>
+        <li><a href="#system-specs" class="nl"><span class="ns cir">○</span>&nbsp;SYSTEM SPECS</a></li>
+        <li><a href="#deployed"     class="nl"><span class="ns cro">✕</span>&nbsp;DEPLOYED</a></li>
+        <li><a href="#contact"      class="nl"><span class="ns squ">□</span>&nbsp;CONTACT</a></li>
       </ul>
     </nav>
 
     <!-- ── HERO ──────────────────────────────── -->
     <section id="hero">
+      <div class="hero-bg-text" aria-hidden="true">DO NOT UNDERESTIMATE</div>
       <div class="hero-inner">
-        <p class="hero-eyebrow">// PLAYER ONE HAS ENTERED</p>
+        <p class="hero-eyebrow">// PLAYER ONE HAS ENTERED THE THIRD PLACE</p>
 
-        <!-- EDIT: Replace "YOUR NAME" with your name (in both data-text and text) -->
-        <h1 class="hero-name glitch" data-text="YOUR NAME">YOUR NAME</h1>
+        <h1 class="hero-name">
+          <span class="hn-line glitch" data-text="JACOB">JACOB</span>
+          <span class="hn-line glitch red-glitch" data-text="SMITH">SMITH</span>
+        </h1>
 
         <div class="hero-role">
+          <span class="role-prefix">›</span>
           <span id="typewriter"></span><span class="type-cursor">▌</span>
         </div>
 
-        <!-- EDIT: Update this tagline -->
-        <p class="hero-sub">
-          Building things that exist beyond ordinary reality.
-        </p>
+        <div class="hero-manifesto">
+          <p>I am not waiting.</p>
+          <p>Last summer I wired control centers for machines that drill through the earth.</p>
+          <p>This summer I join the power grid.</p>
+          <p>I build systems that don't fail.</p>
+        </div>
 
         <div class="hero-btns">
-          <a href="#projects" class="btn-main"><span class="ns cro">✕</span>&nbsp;VIEW WORK</a>
-          <a href="#contact"  class="btn-ghost"><span class="ns cir">○</span>&nbsp;GET IN TOUCH</a>
+          <a href="#field-log" class="btn-main"><span class="ns cro">✕</span>&nbsp;VIEW FIELD LOG</a>
+          <a href="#contact"   class="btn-ghost"><span class="ns cir">○</span>&nbsp;MAKE CONTACT</a>
         </div>
       </div>
 
@@ -106,213 +132,185 @@
       </div>
     </section>
 
-    <!-- ── ABOUT ─────────────────────────────── -->
-    <section id="about" class="reveal">
+    <!-- ── FIELD LOG (Experience) ───────────── -->
+    <section id="field-log" class="reveal">
       <div class="section-head">
         <span class="sh-sym tri">△</span>
-        <h2 class="sh-title">ABOUT</h2>
+        <h2 class="sh-title">FIELD LOG</h2>
         <div class="sh-line"></div>
       </div>
 
-      <div class="about-grid">
-        <!-- Visual / stats column -->
-        <div class="about-visual">
-          <div class="css-cube-wrap">
-            <div class="css-cube">
-              <div class="cf front"></div>
-              <div class="cf back"></div>
-              <div class="cf left"></div>
-              <div class="cf right"></div>
-              <div class="cf top"></div>
-              <div class="cf bottom"></div>
-            </div>
-          </div>
-          <div class="about-stats">
-            <!-- EDIT: Update numbers -->
-            <div class="stat">
-              <span class="stat-n" data-target="3">0</span>
-              <span class="stat-l">YEARS EXP</span>
-            </div>
-            <div class="stat">
-              <span class="stat-n" data-target="12">0</span>
-              <span class="stat-l">PROJECTS</span>
-            </div>
-            <div class="stat">
-              <span class="stat-n" data-target="8">0</span>
-              <span class="stat-l">CLIENTS</span>
-            </div>
-          </div>
-        </div>
+      <div class="field-entries">
 
-        <!-- Text column -->
-        <div class="about-text">
-          <p class="about-tag">// PLAYER DATA</p>
-          <!-- EDIT: Replace with your bio -->
-          <p class="about-p">
-            Replace this with your story. What drives you? What do you build?
-            This is the part where you make yourself real — go weird with it.
-            The PS2 didn't do safe. Neither should you.
-          </p>
-          <p class="about-p">
-            A second paragraph for more depth. Your background, your obsessions,
-            the kind of problems that keep you up at night. Make it yours.
-          </p>
-          <!-- EDIT: Replace tags with relevant keywords about you -->
-          <div class="about-tags">
-            <span class="atag">FULL STACK</span>
-            <span class="atag">UI / UX</span>
-            <span class="atag">OPEN SOURCE</span>
-            <span class="atag">PROBLEM SOLVER</span>
+        <!-- XCEL ENERGY — INCOMING -->
+        <article class="field-entry incoming">
+          <div class="fe-meta">
+            <span class="fe-badge incoming-badge">⚠ INCOMING</span>
+            <span class="fe-dates">JUNE 2026 — AUG 2026</span>
+            <span class="fe-location">DENVER, CO</span>
           </div>
-        </div>
+          <div class="fe-body">
+            <h3 class="fe-company">XCEL ENERGY</h3>
+            <p class="fe-role">Substation Communication Engineering Intern</p>
+            <p class="fe-division">// Substation Communication Engineering · Senior Intern · $24.60/hr</p>
+            <ul class="fe-bullets">
+              <li>Securing communication circuits for power grid SCADA, teleprotection, and remote access</li>
+              <li>Onboarding and troubleshooting substation firewalls and cyber-security systems</li>
+              <li>Engineering lab network maintenance and device configuration</li>
+              <li>Supporting Capital Projects and department automation efforts</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- THE BORING COMPANY -->
+        <article class="field-entry">
+          <div class="fe-meta">
+            <span class="fe-badge done-badge">COMPLETED</span>
+            <span class="fe-dates">MAY 2025 — AUG 2025</span>
+            <span class="fe-location">BASTROP, TX</span>
+          </div>
+          <div class="fe-body">
+            <h3 class="fe-company">THE BORING COMPANY</h3>
+            <p class="fe-role">Electrical Integration Engineering Intern</p>
+            <p class="fe-division">// Electrical Integration · Prufrock Tunneling Program</p>
+            <ul class="fe-bullets">
+              <li>Led full assembly, wiring, and commissioning of the <em>Prufrock 6</em> Operational Control Center — component kitting through final validation</li>
+              <li>Authored and standardized official OCC manufacturing work instructions, creating a scalable process for all future control centers</li>
+              <li>Built HPU and Main Drive cable tracking system, eliminating material waste and ensuring inventory accuracy</li>
+              <li>Maintained BOM for multiple electrical control panels; all builds validated against engineering schematics</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- GS NETWORK SOLUTIONS -->
+        <article class="field-entry">
+          <div class="fe-meta">
+            <span class="fe-badge done-badge">COMPLETED</span>
+            <span class="fe-dates">MAY 2024 — MAY 2025</span>
+            <span class="fe-location">DENVER METRO, CO</span>
+          </div>
+          <div class="fe-body">
+            <h3 class="fe-company">GS NETWORK SOLUTIONS</h3>
+            <p class="fe-role">IT & Network Technician</p>
+            <p class="fe-division">// Network Security · Client Infrastructure</p>
+            <ul class="fe-bullets">
+              <li>Identified recurring failure patterns and deployed preventive measures — <strong>40% reduction</strong> in future complaints</li>
+              <li>Hardened network security via advanced firewall configs and MFA — <strong>30% decrease</strong> in security incidents</li>
+              <li>Delivered personalized client training programs — <strong>45% productivity increase</strong> across key workflows</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- EDUCATION -->
+        <article class="field-entry edu-entry">
+          <div class="fe-meta">
+            <span class="fe-badge active-badge">ACTIVE</span>
+            <span class="fe-dates">2023 — PRESENT</span>
+            <span class="fe-location">BOULDER, CO</span>
+          </div>
+          <div class="fe-body">
+            <h3 class="fe-company">UNIVERSITY OF COLORADO BOULDER</h3>
+            <p class="fe-role">B.S. Electrical & Computer Engineering</p>
+            <p class="fe-division">// College of Engineering & Applied Science</p>
+          </div>
+        </article>
+
       </div>
     </section>
 
-    <!-- ── SKILLS ────────────────────────────── -->
-    <section id="skills" class="reveal">
+    <!-- ── SYSTEM SPECS (Skills) ─────────────── -->
+    <section id="system-specs" class="reveal">
       <div class="section-head">
         <span class="sh-sym cir">○</span>
-        <h2 class="sh-title">SKILLS</h2>
+        <h2 class="sh-title">SYSTEM SPECS</h2>
         <div class="sh-line"></div>
       </div>
 
-      <div class="skills-grid">
-
-        <!-- EDIT: Replace with your actual skill categories and levels -->
-        <div class="skill-card">
-          <div class="skill-card-top">
-            <span class="sk-sym squ">□</span>
-            <h3>FRONTEND</h3>
-          </div>
-          <div class="skill-items">
-            <div class="skill-row">
-              <span class="sk-name">React / Next.js</span>
-              <div class="sk-track"><div class="sk-bar" data-w="88"></div></div>
-              <span class="sk-pct">88%</span>
-            </div>
-            <div class="skill-row">
-              <span class="sk-name">TypeScript</span>
-              <div class="sk-track"><div class="sk-bar" data-w="82"></div></div>
-              <span class="sk-pct">82%</span>
-            </div>
-            <div class="skill-row">
-              <span class="sk-name">CSS / Animation</span>
-              <div class="sk-track"><div class="sk-bar" data-w="90"></div></div>
-              <span class="sk-pct">90%</span>
-            </div>
+      <div class="specs-grid">
+        <div class="spec-block">
+          <h3 class="spec-label"><span class="tri">△</span> LANGUAGES</h3>
+          <div class="spec-tags">
+            <span>Verilog</span>
+            <span>MATLAB</span>
+            <span>Python</span>
+            <span>C++</span>
+            <span>HTML / CSS</span>
+            <span>JavaScript</span>
           </div>
         </div>
-
-        <div class="skill-card">
-          <div class="skill-card-top">
-            <span class="sk-sym tri">△</span>
-            <h3>BACKEND</h3>
-          </div>
-          <div class="skill-items">
-            <div class="skill-row">
-              <span class="sk-name">Node.js</span>
-              <div class="sk-track"><div class="sk-bar" data-w="85"></div></div>
-              <span class="sk-pct">85%</span>
-            </div>
-            <div class="skill-row">
-              <span class="sk-name">Python</span>
-              <div class="sk-track"><div class="sk-bar" data-w="78"></div></div>
-              <span class="sk-pct">78%</span>
-            </div>
-            <div class="skill-row">
-              <span class="sk-name">PostgreSQL</span>
-              <div class="sk-track"><div class="sk-bar" data-w="72"></div></div>
-              <span class="sk-pct">72%</span>
-            </div>
+        <div class="spec-block">
+          <h3 class="spec-label"><span class="cir">○</span> HARDWARE</h3>
+          <div class="spec-tags">
+            <span>FPGA Development</span>
+            <span>Digital Logic Design</span>
+            <span>Circuit Design</span>
+            <span>Clock Signal Division</span>
+            <span>Soldering</span>
+            <span>System Integration & Testing</span>
           </div>
         </div>
-
-        <div class="skill-card">
-          <div class="skill-card-top">
-            <span class="sk-sym cro">✕</span>
-            <h3>TOOLS</h3>
-          </div>
-          <div class="skill-items">
-            <div class="skill-row">
-              <span class="sk-name">Git / GitHub</span>
-              <div class="sk-track"><div class="sk-bar" data-w="92"></div></div>
-              <span class="sk-pct">92%</span>
-            </div>
-            <div class="skill-row">
-              <span class="sk-name">Docker</span>
-              <div class="sk-track"><div class="sk-bar" data-w="70"></div></div>
-              <span class="sk-pct">70%</span>
-            </div>
-            <div class="skill-row">
-              <span class="sk-name">Figma</span>
-              <div class="sk-track"><div class="sk-bar" data-w="80"></div></div>
-              <span class="sk-pct">80%</span>
-            </div>
+        <div class="spec-block">
+          <h3 class="spec-label"><span class="cro">✕</span> TOOLS</h3>
+          <div class="spec-tags">
+            <span>Git</span>
+            <span>Vivado</span>
+            <span>LTSpice</span>
+            <span>Arduino IDE</span>
+            <span>FL Studio</span>
           </div>
         </div>
-
+        <div class="spec-block">
+          <h3 class="spec-label"><span class="squ">□</span> SOFT</h3>
+          <div class="spec-tags">
+            <span>Technical Documentation</span>
+            <span>Cross-functional Collaboration</span>
+            <span>Problem-solving</span>
+            <span>Adaptability</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ── PROJECTS ───────────────────────────── -->
-    <section id="projects" class="reveal">
+    <!-- ── DEPLOYED (Projects) ───────────────── -->
+    <section id="deployed" class="reveal">
       <div class="section-head">
         <span class="sh-sym cro">✕</span>
-        <h2 class="sh-title">PROJECTS</h2>
+        <h2 class="sh-title">DEPLOYED</h2>
         <div class="sh-line"></div>
       </div>
 
       <div class="projects-grid">
 
-        <!-- EDIT: Replace each project card with your actual projects -->
         <article class="proj-card">
+          <div class="proj-status live">● LIVE</div>
           <div class="proj-num">01</div>
           <div class="proj-sym tri">△</div>
-          <h3 class="proj-title">PROJECT ALPHA</h3>
+          <h3 class="proj-title">CU HYPERLOOP</h3>
+          <p class="proj-role">Lead Web Developer & Site Architect</p>
           <p class="proj-desc">
-            Short description of what this project does and why it matters.
-            What problem does it solve? What makes it interesting?
+            Designed and launched the official team website from the ground up.
+            Defined site architecture and content strategy.
+            Built in HTML, CSS, and JavaScript.
+            Resulted in a <strong>40% increase</strong> in membership applications.
           </p>
-          <div class="proj-tags">
-            <span>React</span><span>Node.js</span><span>PostgreSQL</span>
-          </div>
           <div class="proj-links">
-            <a href="#" class="proj-link">LIVE DEMO →</a>
-            <a href="#" class="proj-link ghost">GITHUB →</a>
+            <a href="https://www.cuhyperloop.org/" class="proj-link" target="_blank" rel="noopener">LIVE SITE →</a>
           </div>
         </article>
 
         <article class="proj-card">
+          <div class="proj-status wip">◌ IN PROGRESS</div>
           <div class="proj-num">02</div>
           <div class="proj-sym cir">○</div>
-          <h3 class="proj-title">PROJECT BETA</h3>
+          <h3 class="proj-title">CU AUTONOMOUS RACING</h3>
+          <p class="proj-role">Web Developer</p>
           <p class="proj-desc">
-            Another project description. Be specific — vague descriptions
-            are boring. What did you actually build and what did you learn?
+            Building the official team website to attract members and sponsors.
+            Implementing dynamic gallery and translating the team's brand into
+            a compelling visual presence. Collaborating directly with the club president.
           </p>
-          <div class="proj-tags">
-            <span>Python</span><span>FastAPI</span><span>Docker</span>
-          </div>
           <div class="proj-links">
-            <a href="#" class="proj-link">LIVE DEMO →</a>
-            <a href="#" class="proj-link ghost">GITHUB →</a>
-          </div>
-        </article>
-
-        <article class="proj-card">
-          <div class="proj-num">03</div>
-          <div class="proj-sym squ">□</div>
-          <h3 class="proj-title">PROJECT GAMMA</h3>
-          <p class="proj-desc">
-            Third project. If you have more than three, duplicate this card.
-            Lead with impact — numbers, users, scale if you have them.
-          </p>
-          <div class="proj-tags">
-            <span>TypeScript</span><span>GraphQL</span><span>AWS</span>
-          </div>
-          <div class="proj-links">
-            <a href="#" class="proj-link">LIVE DEMO →</a>
-            <a href="#" class="proj-link ghost">GITHUB →</a>
+            <a href="https://preview--cuautonomousracing.lovable.app/" class="proj-link" target="_blank" rel="noopener">PREVIEW →</a>
           </div>
         </article>
 
@@ -329,34 +327,33 @@
 
       <div class="contact-inner">
         <div class="contact-left">
-          <p class="press-start">// PRESS START</p>
-          <h3 class="contact-headline">INSERT PLAYER 2</h3>
+          <p class="press-start">// INSERT PLAYER 2</p>
+          <h3 class="contact-headline">MAKE CONTACT</h3>
           <p class="contact-body">
-            Ready to build something that exists beyond ordinary reality?
+            Building something that matters?
             Let's talk.
           </p>
         </div>
         <div class="contact-links">
-          <!-- EDIT: Replace with your actual links -->
-          <a href="mailto:you@email.com" class="cl">
+          <a href="mailto:jasm4916@colorado.edu" class="cl">
             <span class="cl-sym tri">△</span>
             <span class="cl-label">EMAIL</span>
-            <span class="cl-val">you@email.com</span>
+            <span class="cl-val">jasm4916@colorado.edu</span>
           </a>
-          <a href="https://github.com/yourusername" class="cl" target="_blank" rel="noopener">
+          <a href="tel:7207250060" class="cl">
             <span class="cl-sym cir">○</span>
-            <span class="cl-label">GITHUB</span>
-            <span class="cl-val">yourusername</span>
+            <span class="cl-label">PHONE</span>
+            <span class="cl-val">720-725-0060</span>
           </a>
-          <a href="https://linkedin.com/in/yourprofile" class="cl" target="_blank" rel="noopener">
+          <a href="https://www.linkedin.com/in/jacob-smith-3b4aa228a/" class="cl" target="_blank" rel="noopener">
             <span class="cl-sym cro">✕</span>
             <span class="cl-label">LINKEDIN</span>
-            <span class="cl-val">yourprofile</span>
+            <span class="cl-val">jacob-smith-3b4aa228a</span>
           </a>
-          <a href="https://twitter.com/yourhandle" class="cl" target="_blank" rel="noopener">
+          <a href="https://github.com/mrqwex10" class="cl" target="_blank" rel="noopener">
             <span class="cl-sym squ">□</span>
-            <span class="cl-label">TWITTER</span>
-            <span class="cl-val">@yourhandle</span>
+            <span class="cl-label">GITHUB</span>
+            <span class="cl-val">mrqwex10</span>
           </a>
         </div>
       </div>
@@ -370,9 +367,9 @@
         <span class="cro">✕</span>
         <span class="squ">□</span>
       </div>
-      <!-- EDIT: Your name -->
-      <p class="footer-name">// YOUR NAME — PORTFOLIO v2.0</p>
+      <p class="footer-name">// JACOB SMITH — PORTFOLIO v2.0</p>
       <p class="footer-tag">LIVE IN YOUR WORLD.&nbsp;&nbsp;PLAY IN OURS.</p>
+      <p class="footer-obs">YOU ARE BEING OBSERVED.</p>
     </footer>
 
   </div><!-- /portfolio -->
